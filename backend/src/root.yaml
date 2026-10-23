@@ -75,6 +75,76 @@ paths:
           description: Missing, invalid or expired token
         '403':
           description: Caller is not a Requester
+    get:
+      summary: List the caller's own vacation requests (Requester only)
+      x-handler: handlers/vacationRequests#listMyRequests
+      x-inputParser: handlers/vacationRequests#parseListMyRequestsInput
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Paginated requests belonging to the caller
+        '400':
+          description: Invalid pagination parameters
+        '401':
+          description: Missing, invalid or expired token
+        '403':
+          description: Caller is not a Requester
+
+  /vacation-requests/all:
+    get:
+      summary: List every vacation request, filterable (Validator only)
+      x-handler: handlers/vacationRequests#listAllRequests
+      x-inputParser: handlers/vacationRequests#parseListAllRequestsInput
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [Pending, Approved, Rejected]
+        - in: query
+          name: userId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Paginated requests across all users, each with its requester
+        '400':
+          description: Invalid status, userId or pagination parameters
+        '401':
+          description: Missing, invalid or expired token
+        '403':
+          description: Caller is not a Validator
 
 components:
   securitySchemes:

@@ -13,7 +13,11 @@ export class HandlerRegistry {
 			"handlers/auth#parseLoginInput": __cef_handlers_auth.parseLoginInput,
 			"handlers/auth#parseMeInput": __cef_handlers_auth.parseMeInput,
 			"handlers/vacationRequests#createVacationRequest": __cef_handlers_vacationRequests.createVacationRequest,
+			"handlers/vacationRequests#listAllRequests": __cef_handlers_vacationRequests.listAllRequests,
+			"handlers/vacationRequests#listMyRequests": __cef_handlers_vacationRequests.listMyRequests,
 			"handlers/vacationRequests#parseCreateVacationRequestInput": __cef_handlers_vacationRequests.parseCreateVacationRequestInput,
+			"handlers/vacationRequests#parseListAllRequestsInput": __cef_handlers_vacationRequests.parseListAllRequestsInput,
+			"handlers/vacationRequests#parseListMyRequestsInput": __cef_handlers_vacationRequests.parseListMyRequestsInput,
 		});
 	}
 }
