@@ -150,6 +150,13 @@ const submit = async () => {
 						</svg>
 					</button>
 				</form>
+
+				<p class="mt-6 text-center text-sm text-frost-500">
+					No account yet?
+					<RouterLink to="/signup" class="font-semibold text-powder-600 hover:text-powder-700">
+						Create one
+					</RouterLink>
+				</p>
 			</div>
 		</div>
 	</main>

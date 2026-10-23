@@ -44,6 +44,16 @@ export const useAuthStore = defineStore("auth", () => {
 		apply(data.token, data.user);
 	};
 
+	// Signup returns the same token/user pair as login, so the session is applied identically.
+	const signup = async (name: string, email: string, password: string): Promise<void> => {
+		const { data } = await api.post<{ token: string; user: User }>("/auth/register", {
+			name,
+			email,
+			password,
+		});
+		apply(data.token, data.user);
+	};
+
 	const logout = (): void => apply(null, null);
 
 	// Called once at startup: a stored token is only trusted after the API confirms it.
@@ -63,5 +73,5 @@ export const useAuthStore = defineStore("auth", () => {
 		ready.value = true;
 	};
 
-	return { user, token, ready, isAuthenticated, login, logout, restore };
+	return { user, token, ready, isAuthenticated, login, signup, logout, restore };
 });

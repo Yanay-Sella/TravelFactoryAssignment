@@ -14,6 +14,8 @@ export class HandlerRegistry {
 			"handlers/auth#me": __cef_handlers_auth.me,
 			"handlers/auth#parseLoginInput": __cef_handlers_auth.parseLoginInput,
 			"handlers/auth#parseMeInput": __cef_handlers_auth.parseMeInput,
+			"handlers/auth#parseRegisterInput": __cef_handlers_auth.parseRegisterInput,
+			"handlers/auth#register": __cef_handlers_auth.register,
 			"handlers/users#listUsers": __cef_handlers_users.listUsers,
 			"handlers/users#parseListUsersInput": __cef_handlers_users.parseListUsersInput,
 			"handlers/vacationRequests#createVacationRequest": __cef_handlers_vacationRequests.createVacationRequest,

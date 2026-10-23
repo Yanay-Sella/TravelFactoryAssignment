@@ -29,6 +29,40 @@ paths:
         '401':
           description: Invalid email or password
 
+  /auth/register:
+    post:
+      summary: Create a Requester account and return a JWT
+      description: >-
+        Self-service signup. The role is always Requester and is never taken from the
+        request body; Validator accounts are provisioned by the seed script.
+      x-handler: handlers/auth#register
+      x-inputParser: handlers/auth#parseRegisterInput
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                  maxLength: 120
+                email:
+                  type: string
+                  format: email
+                  maxLength: 180
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        '201':
+          description: Token and the newly created user
+        '400':
+          description: Malformed body or failed validation
+        '409':
+          description: Email already registered
+
   /auth/me:
     get:
       summary: The authenticated user, for frontend session restore
