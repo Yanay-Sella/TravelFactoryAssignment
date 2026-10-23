@@ -18,7 +18,10 @@ const formatDate = (value: string): string => dateFormat.format(new Date(`${valu
 </script>
 
 <template>
-	<table class="w-full border-collapse text-left text-sm">
+	<!-- The columns have a minimum width below ~400px, so on a phone the table scrolls
+	     inside this wrapper rather than dragging the whole page sideways. -->
+	<div class="-mx-2 overflow-x-auto px-2">
+		<table class="w-full min-w-[26rem] border-collapse text-left text-sm">
 		<thead>
 			<tr class="border-b border-frost-200 text-xs font-bold uppercase tracking-[0.12em] text-frost-500">
 				<th v-if="props.showRequester" scope="col" class="pb-3 pr-4">Requester</th>
@@ -61,6 +64,7 @@ const formatDate = (value: string): string => dateFormat.format(new Date(`${valu
 					<slot name="actions" :request="request" />
 				</td>
 			</tr>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</div>
 </template>
