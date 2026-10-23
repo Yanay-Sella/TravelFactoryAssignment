@@ -4,6 +4,7 @@ import { registerHandlerRefs } from "commoneventframework";
 
 import * as __cef_handlers_auth from "../handlers/auth";
 import * as __cef_handlers_vacationRequests from "../handlers/vacationRequests";
+import * as __cef_handlers_validation from "../handlers/validation";
 
 export class HandlerRegistry {
 	static register(): void {
@@ -15,9 +16,15 @@ export class HandlerRegistry {
 			"handlers/vacationRequests#createVacationRequest": __cef_handlers_vacationRequests.createVacationRequest,
 			"handlers/vacationRequests#listAllRequests": __cef_handlers_vacationRequests.listAllRequests,
 			"handlers/vacationRequests#listMyRequests": __cef_handlers_vacationRequests.listMyRequests,
+			"handlers/vacationRequests#listTeamPlanning": __cef_handlers_vacationRequests.listTeamPlanning,
 			"handlers/vacationRequests#parseCreateVacationRequestInput": __cef_handlers_vacationRequests.parseCreateVacationRequestInput,
 			"handlers/vacationRequests#parseListAllRequestsInput": __cef_handlers_vacationRequests.parseListAllRequestsInput,
 			"handlers/vacationRequests#parseListMyRequestsInput": __cef_handlers_vacationRequests.parseListMyRequestsInput,
+			"handlers/vacationRequests#parseTeamPlanningInput": __cef_handlers_vacationRequests.parseTeamPlanningInput,
+			"handlers/validation#approveVacationRequest": __cef_handlers_validation.approveVacationRequest,
+			"handlers/validation#parseApproveVacationRequestInput": __cef_handlers_validation.parseApproveVacationRequestInput,
+			"handlers/validation#parseRejectVacationRequestInput": __cef_handlers_validation.parseRejectVacationRequestInput,
+			"handlers/validation#rejectVacationRequest": __cef_handlers_validation.rejectVacationRequest,
 		});
 	}
 }

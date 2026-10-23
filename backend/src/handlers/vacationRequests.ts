@@ -30,6 +30,17 @@ const LIST_SELECTION = {
 	user: { id: true, name: true, email: true, role: true },
 } as const;
 
+// The team view is visible to colleagues, so it carries who and when but not why:
+// reason and comments stay out of it.
+const TEAM_SELECTION = {
+	id: true,
+	userId: true,
+	startDate: true,
+	endDate: true,
+	status: true,
+	user: { id: true, name: true },
+} as const;
+
 // Round-trips the date, because Date silently rolls invalid days over:
 // "2027-02-30" parses to 2027-03-02 rather than failing.
 const isCalendarDate = (value: unknown): value is string => {
@@ -195,6 +206,45 @@ export const listAllRequests: HandlerFn = async (input: ListAllRequestsInput) =>
 		relations: { user: true },
 		select: LIST_SELECTION,
 		order: { createdAt: "DESC", id: "DESC" },
+		skip: (input.page - 1) * input.limit,
+		take: input.limit,
+	});
+
+	return {
+		data,
+		total,
+		page: input.page,
+		limit: input.limit,
+		totalPages: Math.ceil(total / input.limit),
+	};
+};
+
+// --- GET /vacation-requests/team (approved vacations, both roles) ---
+
+interface TeamPlanningInput {
+	page: number;
+	limit: number;
+}
+
+export const parseTeamPlanningInput: InputParserFn = (event: CommonEvent) => {
+	// No role argument: both Requesters and Validators plan around the same calendar.
+	const auth = requireRole(event);
+	if (auth instanceof Response) return auth;
+
+	const pagination = parsePagination(event.queryStringParameters);
+	if (pagination instanceof Response) return pagination;
+
+	return pagination as TeamPlanningInput;
+};
+
+export const listTeamPlanning: HandlerFn = async (input: TeamPlanningInput) => {
+	const requests = (await getDataSource()).getRepository(VacationRequest);
+
+	const [data, total] = await requests.findAndCount({
+		where: { status: VacationStatus.Approved },
+		relations: { user: true },
+		select: TEAM_SELECTION,
+		order: { startDate: "ASC", id: "ASC" },
 		skip: (input.page - 1) * input.limit,
 		take: input.limit,
 	});

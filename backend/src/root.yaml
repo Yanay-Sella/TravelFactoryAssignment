@@ -146,6 +146,102 @@ paths:
         '403':
           description: Caller is not a Validator
 
+  /vacation-requests/team:
+    get:
+      summary: Approved vacations across the team (both roles)
+      x-handler: handlers/vacationRequests#listTeamPlanning
+      x-inputParser: handlers/vacationRequests#parseTeamPlanningInput
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Approved vacations, earliest first, without reason or comments
+        '400':
+          description: Invalid pagination parameters
+        '401':
+          description: Missing, invalid or expired token
+
+  /vacation-requests/:id/approve:
+    patch:
+      summary: Approve a pending vacation request (Validator only)
+      x-handler: handlers/validation#approveVacationRequest
+      x-inputParser: handlers/validation#parseApproveVacationRequestInput
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The approved request
+        '400':
+          description: Malformed request id
+        '401':
+          description: Missing, invalid or expired token
+        '403':
+          description: Caller is not a Validator
+        '404':
+          description: No such vacation request
+        '409':
+          description: The request has already been approved or rejected
+
+  /vacation-requests/:id/reject:
+    patch:
+      summary: Reject a pending vacation request with a comment (Validator only)
+      x-handler: handlers/validation#rejectVacationRequest
+      x-inputParser: handlers/validation#parseRejectVacationRequestInput
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [comments]
+              properties:
+                comments:
+                  type: string
+                  description: Required explanation shown to the requester
+      responses:
+        '200':
+          description: The rejected request, including the comment
+        '400':
+          description: Malformed request id, body, or a missing rejection comment
+        '401':
+          description: Missing, invalid or expired token
+        '403':
+          description: Caller is not a Validator
+        '404':
+          description: No such vacation request
+        '409':
+          description: The request has already been approved or rejected
+
 components:
   securitySchemes:
     bearerAuth:

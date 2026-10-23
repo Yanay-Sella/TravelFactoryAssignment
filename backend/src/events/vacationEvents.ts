@@ -18,3 +18,33 @@ subscribe(VACATION_REQUEST_CREATED, (event: VacationRequestCreatedEvent) => {
 		`[event] ${event.type} request=${event.requestId} user=${event.userId} ${event.startDate}..${event.endDate}`
 	);
 });
+
+export const VACATION_REQUEST_APPROVED = "VacationRequestApprovedEvent";
+export const VACATION_REQUEST_REJECTED = "VacationRequestRejectedEvent";
+
+export type VacationRequestApprovedEvent = {
+	type: typeof VACATION_REQUEST_APPROVED;
+	requestId: string;
+	userId: string;
+	validatorId: string;
+};
+
+export type VacationRequestRejectedEvent = {
+	type: typeof VACATION_REQUEST_REJECTED;
+	requestId: string;
+	userId: string;
+	validatorId: string;
+	comments: string;
+};
+
+subscribe(VACATION_REQUEST_APPROVED, (event: VacationRequestApprovedEvent) => {
+	console.log(
+		`[event] ${event.type} request=${event.requestId} user=${event.userId} validator=${event.validatorId}`
+	);
+});
+
+subscribe(VACATION_REQUEST_REJECTED, (event: VacationRequestRejectedEvent) => {
+	console.log(
+		`[event] ${event.type} request=${event.requestId} user=${event.userId} validator=${event.validatorId} reason="${event.comments}"`
+	);
+});
