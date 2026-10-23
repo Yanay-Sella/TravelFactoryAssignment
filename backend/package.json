@@ -7,11 +7,13 @@
   "scripts": {
     "codegen": "cef-gen-handlers",
     "dev": "npm run codegen && ts-node src/index.ts --local",
+    "seed": "ts-node src/db/seed.ts",
     "build": "cef-build",
     "build:full": "cef-build --full",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "commoneventframework": "1.0.19",
     "pg": "^8.23.1",
     "reflect-metadata": "^0.2.2",
