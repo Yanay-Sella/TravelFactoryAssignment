@@ -42,6 +42,40 @@ paths:
         '401':
           description: Missing, invalid or expired token
 
+  /vacation-requests:
+    post:
+      summary: Submit a vacation request (Requester only)
+      x-handler: handlers/vacationRequests#createVacationRequest
+      x-inputParser: handlers/vacationRequests#parseCreateVacationRequestInput
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [startDate, endDate]
+              properties:
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+                reason:
+                  type: string
+                  nullable: true
+      responses:
+        '201':
+          description: The created request, status Pending
+        '400':
+          description: Malformed body or a business rule violation
+        '401':
+          description: Missing, invalid or expired token
+        '403':
+          description: Caller is not a Requester
+
 components:
   securitySchemes:
     bearerAuth:
