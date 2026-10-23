@@ -1,1 +1,179 @@
 @import "tailwindcss";
+
+/* Design tokens for the alpine theme. Everything visual should come from here:
+   colours, type, radii, shadows and motion, so screens stay consistent. */
+@theme {
+	--font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+	--font-display: "Baloo 2", "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+	/* Brand sky blue */
+	--color-powder-50: #eef8ff;
+	--color-powder-100: #d9efff;
+	--color-powder-200: #b7e2ff;
+	--color-powder-300: #83cfff;
+	--color-powder-400: #47b4ff;
+	--color-powder-500: #1f94f5;
+	--color-powder-600: #0b74d4;
+	--color-powder-700: #0a5caa;
+	--color-powder-800: #0e4c8a;
+	--color-powder-900: #113f71;
+
+	/* Icy neutrals: text, borders, muted surfaces */
+	--color-frost-50: #f7fbff;
+	--color-frost-100: #eef4fb;
+	--color-frost-200: #dde7f3;
+	--color-frost-300: #c3d2e4;
+	--color-frost-400: #93a6bf;
+	--color-frost-500: #68809e;
+	--color-frost-600: #4b6180;
+	--color-frost-700: #3a4d68;
+	--color-frost-800: #293a51;
+	--color-frost-900: #16243a;
+
+	/* Coral accent: primary actions and highlights */
+	--color-coral-50: #fff3ed;
+	--color-coral-100: #ffe3d4;
+	--color-coral-200: #ffc3a6;
+	--color-coral-300: #ff9d72;
+	--color-coral-400: #ff7a45;
+	--color-coral-500: #f55a1e;
+	--color-coral-600: #d8420f;
+	--color-coral-700: #b2330d;
+
+	--radius-card: 1.5rem;
+	--radius-tile: 1.125rem;
+
+	--shadow-soft: 0 12px 30px -14px rgb(17 63 113 / 0.3);
+	--shadow-lift: 0 26px 50px -22px rgb(17 63 113 / 0.5);
+	--shadow-glow: 0 16px 30px -12px rgb(245 90 30 / 0.5);
+
+	--animate-float: float 7s ease-in-out infinite;
+	--animate-sway: sway 9s ease-in-out infinite;
+	--animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-14px);
+	}
+}
+
+@keyframes sway {
+	0%,
+	100% {
+		transform: translateY(0) rotate(-2.5deg);
+	}
+	50% {
+		transform: translateY(-8px) rotate(2.5deg);
+	}
+}
+
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(14px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@layer base {
+	body {
+		@apply bg-powder-50 font-sans text-frost-700 antialiased;
+	}
+
+	h1,
+	h2,
+	h3 {
+		@apply font-display text-frost-900;
+	}
+
+	::selection {
+		@apply bg-coral-200 text-frost-900;
+	}
+
+	/* Decorative motion is opt-out for anyone who asked the OS to reduce it. */
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+}
+
+@layer components {
+	/* Surfaces */
+	.card {
+		@apply rounded-card border border-white/70 bg-white/90 shadow-soft backdrop-blur-sm;
+	}
+
+	.card-hover {
+		@apply transition duration-300 hover:-translate-y-1 hover:shadow-lift;
+	}
+
+	.icon-tile {
+		@apply grid size-12 place-items-center rounded-tile bg-linear-to-br from-powder-100 to-powder-200 text-powder-700 shadow-soft;
+	}
+
+	/* Type */
+	.eyebrow {
+		@apply text-xs font-bold uppercase tracking-[0.18em] text-powder-600;
+	}
+
+	/* Buttons */
+	.btn {
+		@apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-powder-500 disabled:pointer-events-none disabled:opacity-60;
+	}
+
+	.btn-primary {
+		@apply bg-linear-to-br from-coral-400 to-coral-500 text-white shadow-glow hover:-translate-y-0.5 hover:from-coral-300 hover:to-coral-400 active:translate-y-0;
+	}
+
+	.btn-ghost {
+		@apply border border-frost-200 bg-white/80 text-frost-700 hover:-translate-y-0.5 hover:border-powder-300 hover:text-powder-700;
+	}
+
+	/* Forms */
+	.field-label {
+		@apply block text-sm font-bold text-frost-800;
+	}
+
+	.field-input {
+		@apply w-full rounded-tile border border-frost-200 bg-white px-4 py-3 text-sm text-frost-900 shadow-sm transition placeholder:text-frost-400 focus:border-powder-400 focus:outline-none focus:ring-4 focus:ring-powder-100;
+	}
+
+	/* Status pills, mapped to VacationStatus */
+	.pill {
+		@apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold;
+	}
+
+	.pill-pending {
+		@apply bg-amber-100 text-amber-700;
+	}
+
+	.pill-approved {
+		@apply bg-emerald-100 text-emerald-700;
+	}
+
+	.pill-rejected {
+		@apply bg-rose-100 text-rose-700;
+	}
+
+	/* Header navigation */
+	.nav-link {
+		@apply rounded-full px-4 py-2 text-sm font-bold text-frost-600 transition hover:bg-powder-50 hover:text-powder-700;
+	}
+
+	.nav-link-active {
+		@apply bg-powder-100 text-powder-800;
+	}
+}
