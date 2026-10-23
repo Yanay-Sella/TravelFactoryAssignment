@@ -4,16 +4,18 @@ const envReady = loadEnv();
 
 import "./generated/HandlerRegistry";
 
+import { createServer } from "node:http";
 import {
 	APIGatewayProxyStructuredResultV2,
 	Context,
 	buildCommonEvent,
 	getRouteConfig,
+	registerHandler,
 	resolveHandlerRef,
 	Response,
-	setLambdaContext,
-	startDevServer
+	setLambdaContext
 } from "commoneventframework";
+import requestListener from "commoneventframework/dist/dev/requestListener";
 import { CommonEvent, LambdaEvent } from "commoneventframework/dist/types/commonEvent";
 import { HandlerFn, InputParserFn } from "./handlers/types";
 
@@ -56,6 +58,15 @@ export const handler = async (
 	}
 };
 
+// CEF's startDevServer binds to "localhost", which is unreachable from outside a
+// container. Same listener, same request mapping — only the bind address differs.
 if (process.argv.includes("--local")) {
-	startDevServer(handler);
+	registerHandler(handler);
+
+	const port = Number(process.env.PORT ?? 8888);
+	const host = process.env.HOST ?? "0.0.0.0";
+
+	createServer(requestListener).listen(port, host, () => {
+		console.log(`Server is running on http://${host}:${port}`);
+	});
 }

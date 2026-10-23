@@ -18,5 +18,47 @@ services:
       timeout: 5s
       retries: 10
 
+  backend:
+    build: ./backend
+    container_name: vacation_backend
+    restart: unless-stopped
+    environment:
+      # Inside the network Postgres is reachable by service name on its own port.
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-vacation}
+      DB_USER: ${POSTGRES_USER:-vacation}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-vacation}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      FRONT_END_URL: http://localhost:5173
+      LAMBDA_NAME: vacation-api
+      ALIAS: dev
+    ports:
+      - "8888:8888"
+    volumes:
+      # Source is mounted for reloads; node_modules stays the image's own copy.
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # The seed is idempotent, so one `up` creates the schema and demo users too.
+    command: sh -c "npm run seed && npm run dev"
+
+  frontend:
+    build: ./frontend
+    container_name: vacation_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_PROXY_TARGET: http://backend:8888
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

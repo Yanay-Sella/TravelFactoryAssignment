@@ -26,6 +26,12 @@ const routes: RouteRecordRaw[] = [
 		component: () => import("../views/ValidatorDashboardView.vue"),
 		meta: { roles: ["Validator"] satisfies UserRole[] },
 	},
+	{
+		path: "/team",
+		name: "team",
+		component: () => import("../views/TeamPlanningView.vue"),
+		// No roles: team planning is open to everyone signed in.
+	},
 	{ path: "/", redirect: "/login" },
 	{ path: "/:pathMatch(.*)*", redirect: "/login" },
 ];

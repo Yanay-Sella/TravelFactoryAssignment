@@ -146,6 +146,21 @@ paths:
         '403':
           description: Caller is not a Validator
 
+  /users:
+    get:
+      summary: List users, for the validator's filter control (Validator only)
+      x-handler: handlers/users#listUsers
+      x-inputParser: handlers/users#parseListUsersInput
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Every user, name first, without password hashes
+        '401':
+          description: Missing, invalid or expired token
+        '403':
+          description: Caller is not a Validator
+
   /vacation-requests/team:
     get:
       summary: Approved vacations across the team (both roles)

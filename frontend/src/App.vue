@@ -53,6 +53,9 @@ const signOut = async () => {
 					>
 						Dashboard
 					</RouterLink>
+					<RouterLink to="/team" class="nav-link" active-class="nav-link-active">
+						Team
+					</RouterLink>
 				</nav>
 
 				<div class="ml-auto flex items-center gap-3">
