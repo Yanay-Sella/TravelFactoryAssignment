@@ -3,4 +3,48 @@ info:
   title: Vacation Request API
   version: 1.0.0
   description: Manage employee vacation requests (submission and validation).
-paths: {}
+paths:
+  /auth/login:
+    post:
+      summary: Exchange credentials for a JWT
+      x-handler: handlers/auth#login
+      x-inputParser: handlers/auth#parseLoginInput
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Token and the authenticated user
+        '400':
+          description: Malformed body
+        '401':
+          description: Invalid email or password
+
+  /auth/me:
+    get:
+      summary: The authenticated user, for frontend session restore
+      x-handler: handlers/auth#me
+      x-inputParser: handlers/auth#parseMeInput
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: The authenticated user
+        '401':
+          description: Missing, invalid or expired token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
