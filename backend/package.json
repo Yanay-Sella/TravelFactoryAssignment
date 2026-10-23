@@ -1,0 +1,25 @@
+{
+  "name": "vacation-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vacation request manager API (Common Event Framework + TypeORM)",
+  "license": "ISC",
+  "scripts": {
+    "codegen": "cef-gen-handlers",
+    "dev": "npm run codegen && ts-node src/index.ts --local",
+    "build": "cef-build",
+    "build:full": "cef-build --full",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "commoneventframework": "1.0.19",
+    "pg": "^8.23.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.31"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
