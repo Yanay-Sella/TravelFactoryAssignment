@@ -104,3 +104,31 @@ notifications would attach.
 
 Approve and reject run as `UPDATE … WHERE status = 'Pending'`, so if two validators click at the
 same moment the database decides: one wins, the other gets `409`.
+
+---
+
+## Technical decisions
+
+- **CEF for routing, our own layer for logic.** CEF maps OpenAPI routes to handlers; commands and
+  events sit above it, so business rules don't depend on HTTP.
+- **Auth in input parsers.** CEF has no middleware, so each protected route's parser calls
+  `requireRole`, and a rejection short-circuits before the handler runs.
+- **Action sub-routes for decisions.** `/approve` and `/reject` map one-to-one onto their commands.
+- **Concurrency in the database.** Approve and reject are conditional `UPDATE`s, so a race can't
+  decide a request twice.
+- **`synchronize` over migrations.** The schema is built from the entities, which keeps setup to
+  one command.
+- **Dates as `date`, not timestamps.** Vacations are whole days, so timezones can't shift them.
+- **One Pinia store.** Only the session is global; everything else is local component state.
+- **Containers for everything.** Postgres, API and UI each run as a service, so `docker compose up`
+  is the only setup step. Both app containers run dev servers, so source changes reload without a
+  rebuild.
+
+## Known limitations
+
+- **No automated tests.** Flows were checked manually and with a browser script that isn't in the repo.
+- **`synchronize: true`** is unsafe for production; it needs migrations before real use.
+- **In-process events.** They are logged and not persisted, and nothing else subscribes yet.
+- **No refresh tokens.** The JWT lasts 8 hours, then the user signs in again.
+- **Same-day requests are rejected**, following the spec's "end must be after start" wording.
+- **`npm audit` warnings** come from CEF's own dependencies.
